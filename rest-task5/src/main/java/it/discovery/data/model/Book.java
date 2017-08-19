@@ -1,5 +1,11 @@
-package it.discovery.model;
+package it.discovery.data.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Book {
 	private int id;
 
@@ -8,6 +14,9 @@ public class Book {
 	private String name;
 	
 	private int year;
+
+	public Book() {
+	}
 
 	public int getId() {
 		return id;

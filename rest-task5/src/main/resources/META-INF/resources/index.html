@@ -1,0 +1,174 @@
+<html>
+<head>
+    <title>Hello, world</title>
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        String.prototype.htmlEscape = function () {
+            return $('<div/>').text(this.toString()).html();
+        };
+
+        function isObject(target) {
+            return Object.prototype.toString.call(target) === '[object Object]';
+        }
+
+        function promise(url, cfg, withoutBody) {
+            let accept = jQuery('input[name=acceptHeader]:checked').val();
+            let standardCfg = {
+                method: 'GET',
+                headers: new Headers({
+                    "Content-Type": "application/json",
+                    "Accept": accept
+                })
+            };
+
+            let requestPromise = fetch(url, Object.assign({}, standardCfg, cfg));
+
+            if (withoutBody) {
+                return requestPromise;
+            }
+            return requestPromise.then((response) => {
+                switch (accept) {
+                    case 'application/json':
+                        return response.json();
+                    case 'application/xml':
+                        return response.text().then((text) => text.htmlEscape()); // TODO parse xml as object
+                    default:
+                        throw new Error(`Unsupported format: ${accept}`);
+                }
+            });
+        }
+
+        function promiseList() {
+            return promise('/book');
+        }
+
+        function promiseAddBook(book) {
+            return promise('/book', {
+                method: 'POST',
+                body: JSON.stringify(book)
+            });
+        }
+
+        function promiseGetBook(id) {
+            return promise(`/book/${id}`);
+        }
+
+        function promiseDeleteBook(id) {
+            return promise(`/book/${id}`, {
+                method: 'DELETE'
+            }, true);
+        }
+
+        function promiseUpdateBook(book) {
+            return promise(`/book/${book.id}`, {
+                method: 'POST',
+                body: JSON.stringify(book)
+            });
+        }
+
+        jQuery(document).ready(function () {
+
+            fetchBooks();
+
+            let $bookContainer = jQuery('[data-book-container]');
+            let $form = jQuery('[data-form]');
+
+            function fetchBooks() {
+                promiseList().then(function (data) {
+                    $bookContainer.empty();
+
+                    if (isObject(data)) {
+                        data.books.forEach((item) => {
+                            $bookContainer.append(`<li>${JSON.stringify(item)}</li>`)
+
+                        });
+                    } else {
+                        $bookContainer.append(`<li>${data}</li>`);
+                    }
+                })
+            }
+
+            jQuery('[data-refresh]').on('click', fetchBooks);
+
+            jQuery('[data-new]').on('click', () => {
+                $form.find('input').each(function (idx, input) {
+                    let $input = jQuery(input);
+                    $input.val('');
+                });
+            });
+
+            jQuery('[data-save]').on('click', () => {
+                let book = {};
+
+                $form.find('input').each(function (idx, input) {
+                    let $input = jQuery(input);
+                    book[$input.attr('name')] = $input.val();
+                });
+
+                let savePromise;
+
+                if (book.id) {
+                    savePromise = promiseUpdateBook(book);
+                } else {
+                    savePromise = promiseAddBook(book);
+                }
+
+                savePromise.then(function (data) {
+                    fetchBooks();
+                });
+            });
+
+            jQuery('[data-delete]').on('click', () => {
+                let id = $form.find('input[name=id]').val();
+
+                promiseDeleteBook(id).then(function (data) {
+                    fetchBooks();
+                });
+            });
+
+            jQuery('[data-load]').on('click', () => {
+                let id = prompt('Load book by id');
+
+                promiseGetBook(id).then((book) => {
+                    Object.keys(book).forEach((key) => {
+                        $form.find(`input[name=${key}]`).val(book[key]);
+                    });
+                });
+
+            });
+
+        });
+    </script>
+</head>
+<body>
+<div>
+    <input name="acceptHeader" value="application/json" type="radio" checked>JSON
+    <input name="acceptHeader" value="application/xml" type="radio">XML
+
+    <br/>
+    <div>Books:</div>
+    <ul data-book-container>
+    </ul>
+
+    <button data-refresh>Refresh</button>
+
+    <div data-form>
+        <div>Book</div>
+        <input name="id" readonly placeholder="id"/>
+        <input name="author" placeholder="Author">
+        <input name="name" placeholder="Name">
+        <input name="year" placeholder="year">
+        <button data-save>save</button>
+        <button data-delete>delete</button>
+        <button data-new>new</button>
+    </div>
+
+    <br/>
+
+    <button data-load>Load</button>
+</div>
+</body>
+</html>
