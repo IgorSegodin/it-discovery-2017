@@ -11,7 +11,7 @@
 		<spring.version>5.0.0.BUILD-SNAPSHOT</spring.version>
 		<spring.boot.version>2.0.0.BUILD-SNAPSHOT</spring.boot.version>
 		<spring.data.redis.version>2.0.0.BUILD-SNAPSHOT</spring.data.redis.version>
-		<spring.security.version>5.0.0.BUILD-SNAPSHOT</spring.security.version>
+		<spring.security.version>4.2.3.RELEASE</spring.security.version>
 		<junit.version>5.0.0-RC2</junit.version>
 	</properties>
 

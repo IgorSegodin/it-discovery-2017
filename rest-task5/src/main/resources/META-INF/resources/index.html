@@ -21,7 +21,8 @@
                 headers: new Headers({
                     "Content-Type": "application/json",
                     "Accept": accept
-                })
+                }),
+                credentials: "same-origin",
             };
 
             let requestPromise = fetch(url, Object.assign({}, standardCfg, cfg));
@@ -67,6 +68,10 @@
                 method: 'POST',
                 body: JSON.stringify(book)
             });
+        }
+
+        function logout() {
+            fetch("/logout", {method: 'POST', credentials: "same-origin"})
         }
 
         jQuery(document).ready(function () {
@@ -147,6 +152,7 @@
 <div>
     <input name="acceptHeader" value="application/json" type="radio" checked>JSON
     <input name="acceptHeader" value="application/xml" type="radio">XML
+    <button onclick="javascript:logout()">Logout</button>
 
     <br/>
     <div>Books:</div>
