@@ -2,6 +2,7 @@ package it.discovery.controller;
 
 import it.discovery.data.response.BookListResponse;
 import it.discovery.data.model.Book;
+import it.discovery.data.response.BookListResponseOld;
 import it.discovery.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -46,8 +47,8 @@ public class BookController {
     }
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-    public BookListResponse listBook() {
-        return new BookListResponse(bookRepository.findAll());
+    public BookListResponseOld listBook() {
+        return new BookListResponseOld(bookRepository.findAll());
     }
 
 }

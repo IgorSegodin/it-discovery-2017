@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+//import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -63,6 +64,7 @@ public class BookControllerTest {
     }
 
     @Test
+//    @WithMockUser(username = "admin", password = "admin")
     public void test_get() throws Exception {
         Book bookResponse = new Book();
         bookResponse.setId(1);

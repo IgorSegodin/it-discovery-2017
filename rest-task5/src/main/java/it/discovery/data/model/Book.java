@@ -15,6 +15,8 @@ public class Book {
 	
 	private int year;
 
+	private boolean onRent = false;
+
 	public Book() {
 	}
 
@@ -53,5 +55,13 @@ public class Book {
 
 	public void setYear(int year) {
 		this.year = year;
+	}
+
+	public boolean isOnRent() {
+		return onRent;
+	}
+
+	public void setOnRent(boolean onRent) {
+		this.onRent = onRent;
 	}
 }

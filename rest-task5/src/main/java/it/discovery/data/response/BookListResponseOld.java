@@ -14,22 +14,22 @@ import java.util.List;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BookListResponse {
+public class BookListResponseOld {
 
-    private List<Resource<Book>> books = new ArrayList<>();
+    private List<Book> books = new ArrayList<>();
 
-    public BookListResponse() {
+    public BookListResponseOld() {
     }
 
-    public BookListResponse(List<Resource<Book>> books) {
+    public BookListResponseOld(List<Book> books) {
         this.books = books;
     }
 
-    public List<Resource<Book>> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Resource<Book>> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 }
